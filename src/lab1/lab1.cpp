@@ -10,13 +10,24 @@
 // Определение функции задающей поведение окна
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
+// Буфер для символов отображаемых на экране
+wchar_t text[2] = {};
+// Цвет фона окна и фона символов
+COLORREF color = WHITE;
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                    LPSTR ptrCmdLine, int nCmdShow) {
+/// TODO: Сделать разбор входящих параметров и их обработку
+    LPWSTR cliArgs = GetCommandLine();
+    color = RGB(255, 0, 0);
+    HBRUSH hBrushBgColor = CreateSolidBrush(color);
+
     // Регистрация класса окна
     WNDCLASS wc = {};
     wc.lpfnWndProc = WndProc;
     wc.hInstance = hInstance;
-    wc.lpszClassName = L"WindowTemplate";
+    wc.hbrBackground = hBrushBgColor;
+    wc.lpszClassName = L"DynamicBackgroundWindow";
     if (!RegisterClass(&wc)) {
         ErrorExit(TEXT("RegisterClass"));
         return 0;
@@ -37,10 +48,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
         return 0;
     }
 
-    // Обработка параметров командной строки
-    LPWSTR cliArgs = GetCommandLine();
-    MessageBox(NULL, cliArgs, L"OK", MB_OK);
-
     // Задание режима отображения окна (Прим. полноэкранный, оконный и т.д.)
     ShowWindow(hwnd, nCmdShow);
 
@@ -54,8 +61,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    static wchar_t text[2] = {};
-    static COLORREF color = WHITE;
     switch (uMsg) {
         case WM_PAINT:
             drawText(hwnd, text, color);

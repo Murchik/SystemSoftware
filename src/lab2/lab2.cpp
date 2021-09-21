@@ -4,62 +4,37 @@
 
 #include <windows.h>
 
+#include "../../include/errorHandling.hpp"
 #include "../../include/keymaps.hpp"
 
+#define ID_BTN 0x1
+#define ID_EDIT 0x2
+
+// Определение функции задающей поведение окна
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-int WINAPI WinMain(HINSTANCE hInstance,
-                   HINSTANCE hPrevInstance,
-                   LPSTR ptrCmdLine,
-                   int nCmdShow)
-{
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                   LPSTR ptrCmdLine, int nCmdShow) {
     // Регистрация класса окна
-    const wchar_t className[] = L"ButtonWindow";
-
     WNDCLASS wc = {};
-
     wc.lpfnWndProc = WndProc;
     wc.hInstance = hInstance;
-    wc.lpszClassName = className;
-
+    wc.lpszClassName = L"FormWindow";
     RegisterClass(&wc);
 
     // Создание окна
-    HWND hwnd = CreateWindowEx(0,                   // Дополнительные стили окон
-                               className,           // Класс окна
-                               L"Lab2",             // Текст окна
-                               WS_OVERLAPPEDWINDOW, // Стиль окна
-
-                               // Размер и позиция
-                               CW_USEDEFAULT, CW_USEDEFAULT, 640, 480,
-
-                               NULL,      // Родительское окно
-                               NULL,      // Меню
-                               hInstance, // Дескриптор экземпляра
-                               NULL       // Дополнительные данные приложения
-    );
-    if (!hwnd)
-    {
-        MessageBox(NULL, L"Не удалось создать окно!", L"Выход", MB_OK);
-        return NULL;
-    }
-
-    HWND hwndButton = CreateWindow(L"BUTTON",       // Предопределенный класс
-                                   L"Сделать лабу", // Текст кнопки
-                                   // Стили окна
-                                   WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
-
-                                   // Позиция x и y и ширина и высота окна
-                                   100, 100, 200, 100,
-
-                                   hwnd,                                              // Родительское окно
-                                   NULL,                                              // Меню
-                                   (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE), // Дескриптор экземпляра
-                                   NULL);                                             // Дополнительные данные приложения
-    if (!hwndButton)
-    {
-        MessageBox(NULL, L"Не удалось создать окно с кнопкой!", L"Выход", MB_OK);
-        return NULL;
+    HWND hwnd = CreateWindow(wc.lpszClassName,     // Класс окна
+                             L"Lab2",              // Текст окна
+                             WS_OVERLAPPEDWINDOW,  // Стиль окна
+                             100, 100,             // Позиция
+                             640, 480,             // Размер
+                             NULL,       // Родительское окно
+                             NULL,       // Меню
+                             hInstance,  // Дескриптор экземпляра
+                             NULL);  // Дополнительные данные приложения
+    if (!hwnd) {
+        ErrorExit(TEXT("Create main window"));
+        return 0;
     }
 
     // Задание режима отображения окна (Прим. полноэкранный, оконный и т.д.)
@@ -67,81 +42,102 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
     // Обработка сообщений из очереди сообщений процесса
     MSG msg = {};
-    while (GetMessage(&msg, NULL, 0, 0))
-    {
+    while (GetMessage(&msg, NULL, 0, 0)) {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
     return msg.wParam;
 }
 
-LRESULT CALLBACK WndProc(HWND hwnd,
-                         UINT uMsg,
-                         WPARAM wParam,
-                         LPARAM lParam)
-{
-    switch (uMsg)
-    {
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        return 0;
+LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    
+    static WCHAR editStr[512] = {};
 
-    case WM_COMMAND:
-    {
-        // Указание станцию окна, рабочий стол, стандартные дескрипторы и внешний вид главного окна для процесса во время создания.
-        STARTUPINFO si = {};
-        // Содержит информацию о недавно созданном процессе и его основном потоке.
-        PROCESS_INFORMATION pi = {};
+    switch (uMsg) {
+        case WM_CREATE: {
+            CreateWindow(L"EDIT",  // Предопределенный класс
+                         L"Enter command here",  // Текст кнопки
+                         WS_VISIBLE | WS_CHILD,  // Стили окна
+                         220, 100,               // Позиция
+                         200, 100,               // Размер
+                         hwnd,             // Родительское окно
+                         (HMENU)ID_EDIT,  // Меню
+                         (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE),  // Дескриптор экземпляра
+                         NULL);  // Дополнительные данные приложения
 
-        ZeroMemory(&si, sizeof(si));
-        si.cb = sizeof(si);
-        ZeroMemory(&pi, sizeof(pi));
+            CreateWindow(L"BUTTON",  // Предопределенный класс
+                         L"Запустить",        // Текст кнопки
+                         WS_VISIBLE | WS_CHILD,  // Стили окна
+                         270, 200,               // Позиция
+                         100, 50,                // Размер
+                         hwnd,             // Родительское окно
+                         (HMENU)ID_BTN,  // Меню
+                         (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE),  // Дескриптор экземпляра
+                         NULL);  // Дополнительные данные приложения
+        }
+            return 0;
 
-        LPCWSTR path = L"D:\\Libraries\\Documents\\Repos\\SystemSoftware\\builds\\lab1.exe";
-        if (!CreateProcess(path,  // Имя выполняемого модуля
-                           NULL,  // Аргументы командной строки
-                           NULL,  // Дескриптор процесса не наследуется
-                           NULL,  // Дескриптор потока не наследуется
-                           FALSE, // Запрет наследования дескриптора
-                           0,     // Нет флагов создания
-                           NULL,  // Используйте родительский блок среды
-                           NULL,  // Используйте рабочую дирикторию родителя
-                           &si,   // Указатель на структуру STARTUPINFO
-                           &pi)   // Указатель на структуру PROCESS_INFORMATION
-        )
-        {
-            MessageBox(NULL, L"Не удалось создать процесс!", L"Ошибка", MB_OK);
+        case WM_DESTROY: {
+            // Do nothing
+        }
             PostQuitMessage(0);
             return 0;
-        }
 
-        // Подождите, пока дочерний процесс не создастся
-        WaitForSingleObject(pi.hProcess, 1000);
+        case WM_COMMAND: {
+            if (wParam == ID_BTN) {
+                // Указание станцию окна, рабочий стол, стандартные дескрипторы и внешний вид главного окна для процесса во время создания.
+                STARTUPINFO si = {};
 
-        HWND hwndHelp = FindWindow(L"WindowTemplate", L"Dynamic Background Window");
-        if (!hwndHelp)
-        {
-            // Закрываем дескрипторы процессов и потоков
-            CloseHandle(pi.hProcess);
-            CloseHandle(pi.hThread);
+                // Содержит информацию о недавно созданном процессе и его основном потоке.
+                PROCESS_INFORMATION pi = {};
 
-            MessageBox(NULL, L"Созданное окно не найдено!", L"Ошибка", MB_OK);
-            PostQuitMessage(0);
+                ZeroMemory(&si, sizeof(si));
+                si.cb = sizeof(si);
+                ZeroMemory(&pi, sizeof(pi));
+
+                LPCWSTR path =
+                    L"D:\\Libraries\\Documents\\Repos\\SystemSoftware\\builds\\lab1.exe";
+
+                HWND hBtn = FindWindowExW(hwnd, NULL, L"EDIT", L"Enter command here");
+                if (!hBtn) {
+                    ErrorExit(TEXT("Find Window Edit"));
+                    return 0;
+                }
+                GetWindowText(hBtn, editStr, 512);
+
+                CreateProcess(
+                    path,  // Имя выполняемого модуля
+                    editStr,  // Аргументы командной строки
+                    NULL,  // Дескриптор процесса не наследуется
+                    NULL,  // Дескриптор потока не наследуется
+                    FALSE,  // Запрет наследования дескриптора
+                    0,  // Нет флагов создания
+                    NULL,  // Используйте родительский блок среды
+                    NULL,  // Используйте рабочую дирикторию родителя
+                    &si,  // Указатель на структуру STARTUPINFO
+                    &pi);  // Указатель на структуру PROCESS_INFORMATION
+
+                // Подождите, пока дочерний процесс не создастся
+                WaitForSingleObject(pi.hProcess, 1000);
+
+            /// TODO: Сделать отправку команд на смену цвета фона
+                HWND findHwnd = FindWindow(L"DynamicBackgroundWindow", L"Dynamic Background Window");
+                if (!findHwnd) {
+                    ErrorExit(TEXT("Find Window DynamicBackgroundWindow"));
+                    return 0;
+                }
+                //SendMessage(findHwnd, WM_KEYDOWN, Q_KEY, NULL);
+
+                // Ждём пока дочерний процесс завершится
+                WaitForSingleObject(pi.hProcess, INFINITE);
+
+                // Закрываем дескрипторы процессов и потоков
+                CloseHandle(pi.hProcess);
+                CloseHandle(pi.hThread);
+            }
+        }  // case WM_COMMAND
             return 0;
-        }
-
-        /// TODO: Сделать поведение первой проги по варианту
-        SendMessage(hwndHelp, WM_KEYDOWN, Q_KEY, NULL);
-
-        // Ждём пока дочерний процесс завершится
-        WaitForSingleObject(pi.hProcess, INFINITE);
-
-        // Закрываем дескрипторы процессов и потоков
-        CloseHandle(pi.hProcess);
-        CloseHandle(pi.hThread);
-    }
-        return 0;
-    }
+    }  // Switch
 
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
-}
+}  // WndProc
