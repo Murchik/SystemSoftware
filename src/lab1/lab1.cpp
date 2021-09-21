@@ -14,6 +14,12 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR ptrCmdLine,
                    int nCmdShow)
 {
+    //LPWSTR* argList;
+    //int nArgs = 4;
+    //argList = CommandLineToArgvW(GetCommandLineW(), &nArgs);
+    LPWSTR cliArgs = GetCommandLine();
+    //LPWSTR cliArgs = CommandLineToArgvW();
+
     // Регистрация класса окна
     const wchar_t className[] = L"WindowTemplate";
 
@@ -44,6 +50,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
         MessageBox(NULL, L"Не удалось создать окно!", L"Выход", MB_OK);
         return NULL;
     }
+
+
+    MessageBox(NULL, cliArgs, L"OK", MB_OK);
 
     // Задание режима отображения окна (Прим. полноэкранный, оконный и т.д.)
     ShowWindow(hwnd, nCmdShow);
