@@ -51,7 +51,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     
-    static WCHAR editStr[512] = {};
+    static WCHAR editTextBuf[512] = {};
 
     switch (uMsg) {
         case WM_CREATE: {
@@ -87,32 +87,31 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
             if (wParam == ID_BTN) {
                 // Указание станцию окна, рабочий стол, стандартные дескрипторы и внешний вид главного окна для процесса во время создания.
                 STARTUPINFO si = {};
+                ZeroMemory(&si, sizeof(si));
+                si.cb = sizeof(si);
 
                 // Содержит информацию о недавно созданном процессе и его основном потоке.
                 PROCESS_INFORMATION pi = {};
-
-                ZeroMemory(&si, sizeof(si));
-                si.cb = sizeof(si);
                 ZeroMemory(&pi, sizeof(pi));
 
+                // Создание пути к исполняемому файлу
                 WCHAR path[1024] = {};
                 DWORD pathLen = GetCurrentDirectory(1024, path);
-                LPCWSTR localPath = L"\\lab1.exe";
-                for (int i = 0; i < 10; i++) {
+                LPCWSTR localPath = L"\\builds\\lab1.exe";
+                for (int i = 0; i < 17; i++) {
                     path[i + pathLen] = localPath[i];
                 }
-                path[pathLen + 10] = '\0';
+                path[pathLen + 17] = '\0';
 
-                HWND hBtn = FindWindowExW(hwnd, NULL, L"EDIT", L"Enter command here");
-                if (!hBtn) {
-                    ErrorExit(TEXT("Find Window Edit"));
-                    return 0;
-                }
-                GetWindowText(hBtn, editStr, 512);
+                // Получение текста из поля ввода
+                int editTextLen = SendDlgItemMessageW(hwnd, ID_EDIT, WM_GETTEXTLENGTH, 0, 0);
+                GetDlgItemText(hwnd, ID_EDIT, editTextBuf, 512);
+                editTextBuf[editTextLen] = '\0';
 
-                CreateProcess(
+                // Запуск исполняемого файла первой программы
+                BOOL win = CreateProcess(
                     path,  // Имя выполняемого модуля
-                    editStr,  // Аргументы командной строки
+                    NULL,  // Аргументы командной строки
                     NULL,  // Дескриптор процесса не наследуется
                     NULL,  // Дескриптор потока не наследуется
                     FALSE,  // Запрет наследования дескриптора
@@ -121,6 +120,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                     NULL,  // Используйте рабочую дирикторию родителя
                     &si,  // Указатель на структуру STARTUPINFO
                     &pi);  // Указатель на структуру PROCESS_INFORMATION
+                
+                if (!win) {
+                    ErrorExit(TEXT("CreateProcess"));
+                    return 0;
+                }
 
                 // Подождите, пока дочерний процесс не создастся
                 WaitForSingleObject(pi.hProcess, 1000);
@@ -131,10 +135,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                     ErrorExit(TEXT("Find Window DynamicBackgroundWindow"));
                     return 0;
                 }
-                //SendMessage(findHwnd, WM_KEYDOWN, Q_KEY, NULL);
+                SendMessage(findHwnd, WM_KEYDOWN, Q_KEY, NULL);
 
                 // Ждём пока дочерний процесс завершится
-                WaitForSingleObject(pi.hProcess, INFINITE);
+                WaitForSingleObject(pi.hProcess, 333);
 
                 // Закрываем дескрипторы процессов и потоков
                 CloseHandle(pi.hProcess);
