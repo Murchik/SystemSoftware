@@ -95,8 +95,13 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                 si.cb = sizeof(si);
                 ZeroMemory(&pi, sizeof(pi));
 
-                LPCWSTR path =
-                    L"D:\\Libraries\\Documents\\Repos\\SystemSoftware\\builds\\lab1.exe";
+                WCHAR path[1024] = {};
+                DWORD pathLen = GetCurrentDirectory(1024, path);
+                LPCWSTR localPath = L"\\lab1.exe";
+                for (int i = 0; i < 10; i++) {
+                    path[i + pathLen] = localPath[i];
+                }
+                path[pathLen + 10] = '\0';
 
                 HWND hBtn = FindWindowExW(hwnd, NULL, L"EDIT", L"Enter command here");
                 if (!hBtn) {
