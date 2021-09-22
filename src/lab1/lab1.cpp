@@ -4,7 +4,6 @@
 
 #include <windows.h>
 
-#include "../../include/errorHandling.hpp"
 #include "../../include/utils.hpp"
 
 // Определение функции задающей поведение окна
@@ -17,9 +16,9 @@ COLORREF color = WHITE;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                    LPSTR ptrCmdLine, int nCmdShow) {
-/// TODO: Сделать разбор входящих параметров и их обработку
+    // Обработка параметра командной строки и получение цвета
     LPWSTR cliArgs = GetCommandLine();
-    color = RGB(255, 0, 0);
+    getColorFromStr(cliArgs, color);
     HBRUSH hBrushBgColor = CreateSolidBrush(color);
 
     // Регистрация класса окна
@@ -64,6 +63,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
         case WM_PAINT:
             drawText(hwnd, text, color);
+            return 0;
+        case WM_MYCASE:
+            text[0] = ' ';
+            color = (COLORREF)wParam;
+            InvalidateRect(hwnd, NULL, TRUE);
             return 0;
         case WM_KEYDOWN:
             keyHandler(hwnd, wParam, text, color);
