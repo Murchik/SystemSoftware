@@ -14,8 +14,7 @@ wchar_t text[2] = {};
 // Цвет фона окна и фона символов
 COLORREF color = WHITE;
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-                   LPSTR ptrCmdLine, int nCmdShow) {
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR ptrCmdLine, int nCmdShow) {
     // Обработка параметра командной строки и получение цвета
     LPWSTR cliArgs = GetCommandLine();
     getColorFromStr(cliArgs, color);
@@ -51,9 +50,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     ShowWindow(hwnd, nCmdShow);
 
     // Обработка сообщений из очереди сообщений процесса
-    MSG msg = {};
+    MSG msg;
     while (GetMessage(&msg, NULL, 0, 0)) {
+        // Преобразует сообщения виртуального ключа в символьные сообщения.
+        // Символьные сообщения отправляются в очередь сообщений вызывающего
+        // потока, чтобы быть прочитанными при следующем вызове потоком функции
+        // GetMessage или PeekMessage.
         TranslateMessage(&msg);
+
+        // Каждый раз, когда программа вызывает функцию DispatchMessage, она
+        // косвенно заставляет Windows вызывать функцию WindowProc один раз для
+        // каждого сообщения.
         DispatchMessage(&msg);
     }
     return msg.wParam;
@@ -61,20 +68,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
-        case WM_PAINT:
-            drawText(hwnd, text, color);
-            return 0;
         case WM_MYCASE:
             text[0] = ' ';
             color = (COLORREF)wParam;
             InvalidateRect(hwnd, NULL, TRUE);
-            return 0;
+            break;
+        case WM_PAINT:
+            drawText(hwnd, text, color);
+            break;
         case WM_KEYDOWN:
             keyHandler(hwnd, wParam, text, color);
-            return 0;
-        case WM_DESTROY:
-            PostQuitMessage(0);
-            return 0;
+            break;
     }
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
