@@ -7,7 +7,6 @@ lab1:
 lab2:
 	g++ src\lab1\lab1.cpp -o builds\lab1.exe -mwindows
 	g++ src\lab2\lab2.cpp -o builds\lab2.exe -mwindows
-	builds\lab2.exe
 
 clean:
 	DEL builds\*

@@ -63,7 +63,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         case WM_CREATE:
             // Создание полей ввода и кнопок
             createChildWindows(hwnd);
-            break;
+            return 0;
         case WM_COMMAND:
             // Обработка нажитий на кнопки
             if (wParam == ID_CREATE_BTN) {
@@ -71,7 +71,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
             } else if (wParam == ID_UPDATE_BTN) {
                 updateProcess(hwnd, updateText);
             }
-            break;
+            return 0;
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            return 0;
     }
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }

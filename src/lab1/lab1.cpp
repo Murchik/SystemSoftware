@@ -72,13 +72,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
             text[0] = ' ';
             color = (COLORREF)wParam;
             InvalidateRect(hwnd, NULL, TRUE);
-            break;
+            return 0;
         case WM_PAINT:
             drawText(hwnd, text, color);
-            break;
+            return 0;
         case WM_KEYDOWN:
             keyHandler(hwnd, wParam, text, color);
-            break;
+            return 0;
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            return 0;
     }
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
