@@ -51,7 +51,6 @@ void getColorFromStr(const LPWSTR text, COLORREF &color) {
     for (int i = 0; text[i] != '\0'; i++) {
         text[i] = toupper(text[i]);
     }
-
     if (wcscmp(text, L"RED") == 0) {
         color = RED;
     } else if (wcscmp(text, L"GREEN") == 0) {
@@ -98,9 +97,9 @@ void keyHandler(const HWND &hwnd, const WPARAM &wParam, const LPWSTR text, COLOR
             break;
         default:
             break;
-    }  // Case
+    }
     InvalidateRect(hwnd, NULL, TRUE);
-}  // keyHandler
+}
 
 // Создание полей ввода и кнопок
 void createChildWindows(const HWND &hwnd) {

@@ -4,7 +4,7 @@
 
 #include <windows.h>
 
-#include "../../include/utils.hpp"
+#include "../include/utils.hpp"
 
 // Определение функции задающей поведение окна
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
