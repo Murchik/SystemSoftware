@@ -3,7 +3,7 @@
 #include <string>
 #include <random>
 #include <atomic>
-#include <atomic>
+#include <thread>
 #include <mutex>
 
 struct bathroom_t;
