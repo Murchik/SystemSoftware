@@ -11,6 +11,8 @@ Global
 		Lab1|x86 = Lab1|x86
 		Lab2|x64 = Lab2|x64
 		Lab2|x86 = Lab2|x86
+		Lab4|x64 = Lab4|x64
+		Lab4|x86 = Lab4|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A4A511B5-D211-48E1-BE50-8F74F6735B2E}.Lab1|x64.ActiveCfg = Lab1|x64
@@ -21,6 +23,10 @@ Global
 		{A4A511B5-D211-48E1-BE50-8F74F6735B2E}.Lab2|x64.Build.0 = Lab2|x64
 		{A4A511B5-D211-48E1-BE50-8F74F6735B2E}.Lab2|x86.ActiveCfg = Lab2|Win32
 		{A4A511B5-D211-48E1-BE50-8F74F6735B2E}.Lab2|x86.Build.0 = Lab2|Win32
+		{A4A511B5-D211-48E1-BE50-8F74F6735B2E}.Lab4|x64.ActiveCfg = Lab4|x64
+		{A4A511B5-D211-48E1-BE50-8F74F6735B2E}.Lab4|x64.Build.0 = Lab4|x64
+		{A4A511B5-D211-48E1-BE50-8F74F6735B2E}.Lab4|x86.ActiveCfg = Lab4|Win32
+		{A4A511B5-D211-48E1-BE50-8F74F6735B2E}.Lab4|x86.Build.0 = Lab4|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

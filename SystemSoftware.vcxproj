@@ -21,6 +21,14 @@
       <Configuration>Lab2</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Lab4|Win32">
+      <Configuration>Lab4</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Lab4|x64">
+      <Configuration>Lab4</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -37,16 +45,44 @@
   <ItemGroup>
     <ClInclude Include="include\colors.hpp" />
     <ClInclude Include="include\keymaps.hpp" />
+    <ClInclude Include="include\lab4.hpp" />
     <ClInclude Include="include\utils.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\bathroom.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab1|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab1|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab2|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab2|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab4|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab4|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\lab1.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab1|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab4|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab2|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab4|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\lab2.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab1|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab4|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab2|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\lab4.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab4|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab4|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab2|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab2|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab1|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab1|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\person.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab1|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab1|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab2|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab2|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab4|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Lab4|x64'">false</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -87,12 +123,19 @@
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Lab1|Win32'">
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Lab4|Win32'" Label="Configuration">
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Lab2|Win32'" Label="Configuration">
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Lab1|x64'">
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Lab4|x64'" Label="Configuration">
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Lab2|x64'" Label="Configuration">
     <PlatformToolset>v142</PlatformToolset>
@@ -143,6 +186,16 @@
     <OutDir>.\builds</OutDir>
     <IntDir>..\builds\$(Configuration)\</IntDir>
     <TargetName>lab1</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Lab4|x64'">
+    <OutDir>.\builds</OutDir>
+    <IntDir>..\builds\$(Configuration)\</IntDir>
+    <TargetName>lab4</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Lab4|Win32'">
+    <TargetName>lab4</TargetName>
+    <IntDir>..\builds\$(Configuration)\</IntDir>
+    <OutDir>.\builds</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
